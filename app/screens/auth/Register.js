@@ -9,23 +9,33 @@ import {
 } from 'react-native';
 const EMAIL = 'email';
 const PASSWORD = 'password';
-const LoginScreen = () => {
+const FULL_NAME = 'full_name';
+const CONFIRM_PASSWORD = 'confirm_password';
+const RegisterScreen = () => {
   const [userData, setUserData] = useState({});
 
   const handleChange = (name, value) => {
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
-  const handleLogin = () => {
+  const handleCreateAccount = () => {
     // Perform login logic here
-    console.log('Data:', userData);
+    console.log('Usersta:', userData);
   };
 
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.headerText}>Login</Text>
+        <Text style={styles.headerText}>Register</Text>
       </View>
-
+      <View style={styles.inputWrapper}>
+        <Text>Your Fullname</Text>
+        <TextInput
+          style={styles.input}
+          placeholder='Fullname'
+          onChangeText={(text) => handleChange(FULL_NAME, text)}
+          value={userData[FULL_NAME] || ''}
+        />
+      </View>
       <View style={styles.inputWrapper}>
         <Text>Your Email</Text>
         <TextInput
@@ -44,25 +54,24 @@ const LoginScreen = () => {
           value={userData[PASSWORD] || ''}
           secureTextEntry
         />
-        <TouchableOpacity
-          style={{
-            width: '100%',
-          }}
-          onPress={() => console.log('Forgot Password')}
-        >
-          <Text style={{ color: 'blue', textAlign: 'right' }}>
-            Forgot Password
-          </Text>
-        </TouchableOpacity>
       </View>
-
-      <Pressable style={styles.button} onPress={handleLogin}>
+      <View style={styles.inputWrapper}>
+        <Text>Confirm your Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder='Confirm password'
+          onChangeText={(text) => handleChange(CONFIRM_PASSWORD, text)}
+          value={userData[CONFIRM_PASSWORD] || ''}
+          secureTextEntry
+        />
+      </View>
+      <Pressable style={styles.button} onPress={handleCreateAccount}>
         <Text style={styles.buttonText}>Create account</Text>
       </Pressable>
 
       <TouchableOpacity onPress={() => console.log('Next page')}>
         <Text style={[styles.signupWrapper, { color: 'blue' }]}>
-          Returning user ? Login
+          New user ? Create account
         </Text>
       </TouchableOpacity>
     </View>
@@ -76,22 +85,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 30,
+    rowGap: 18,
     padding: 16,
     borderColor: 'red',
     borderWidth: 3,
   },
   inputWrapper: {
     width: '100%',
-    rowGap: 8,
+    rowGap: 4,
     justifyContent: 'center',
     alignItems: 'flex-start',
   },
   input: {
     width: '100%',
-    fontSize: 20,
+    fontSize: 16,
     paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingVertical: 8,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 2,
@@ -101,10 +110,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
     padding: 12,
     borderRadius: 4,
+    marginTop: 15,
   },
   buttonText: {
     color: '#fff',
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   headerText: {
     color: '#555',
@@ -119,4 +130,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;

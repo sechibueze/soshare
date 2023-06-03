@@ -1,29 +1,20 @@
-import {
-  StyleSheet,
-  StatusBar,
-  Platform,
-  SafeAreaView,
-  Text,
-  View,
-} from 'react-native';
-import Login from './app/screens/auth/Login';
-import Register from './app/screens/auth/Register';
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { View, Text } from 'react-native';
+// import LoginScreen from './app/screens/auth/Login';
+// import RegisterScreen from './app/screens/auth/Register';
+// import ForgotPasswordScreen from './app/screens/auth/ForgotPassword';
+// import AccountScreen from './app/screens/AccountScreen';
+// import SettingScreen from './app/screens/SettingScreen';
+// import Tabs from './app/components/navigation/Tabs';
+import AppStack from './app/navigation';
 
+const Stack = createNativeStackNavigator();
 export default function App() {
   return (
-    <SafeAreaView style={styles.container}>
-      {/* <Register /> */}
-      <Login />
-    </SafeAreaView>
+    <NavigationContainer>
+      <AppStack />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
-  },
-});

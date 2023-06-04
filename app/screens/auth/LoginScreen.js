@@ -1,67 +1,110 @@
 import React, { useState } from 'react';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import {
   View,
   Pressable,
   Text,
-  TextInput,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 import ScreenWrapper from '../../components/common/ScreenWrapper';
+import InputBox from '../../components/common/InputBox';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../redux/auth/authSlice';
 const EMAIL = 'email';
 const PASSWORD = 'password';
+
+const initialFormState = {
+  [EMAIL]: '',
+  [PASSWORD]: '',
+};
+
+const loginSchema = Yup.object().shape({
+  [EMAIL]: Yup.string()
+    .email('Please enter valid email')
+    .required('Email Address is Required'),
+  [PASSWORD]: Yup.string()
+    .min(8, ({ min }) => `Password must be at least ${min} characters`)
+    .required('Password is required'),
+});
 const LoginScreen = ({ navigation }) => {
-  const [userData, setUserData] = useState({});
-
-  const handleChange = (name, value) => {
-    setUserData((prev) => ({ ...prev, [name]: value }));
-  };
-  const handleLogin = () => {
-    // Perform login logic here
-    console.log('Data:', userData);
-    return navigation.navigate('Accounts');
-  };
-
+  const dispatch = useDispatch();
   return (
     <ScreenWrapper>
       <View style={styles.container}>
         <View>
-          <Text style={styles.headerText}>Login</Text>
+          <Text style={styles.headerText}>Login </Text>
         </View>
 
-        <View style={styles.inputWrapper}>
-          <Text>Your Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder='Email'
-            onChangeText={(text) => handleChange(EMAIL, text)}
-            value={userData[EMAIL] || ''}
-          />
-        </View>
-        <View style={styles.inputWrapper}>
-          <Text>Your Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder='Password'
-            onChangeText={(text) => handleChange(PASSWORD, text)}
-            value={userData[PASSWORD] || ''}
-            secureTextEntry
-          />
-          <TouchableOpacity
-            style={{
-              width: '100%',
-            }}
-            onPress={() => navigation.navigate('ForgotPassword')}
-          >
-            <Text style={{ color: 'blue', textAlign: 'right' }}>
-              Forgot Password
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <Formik
+          validationSchema={loginSchema}
+          onSubmit={(data) => {
+            dispatch(
+              loginUser({
+                full_name: data.email,
+              })
+            );
+            navigation.navigate('Accounts');
+          }}
+          initialValues={initialFormState}
+        >
+          {({
+            values: formValues,
+            errors: formErrors,
+            touched: touchedState,
+            handleChange,
+            handleSubmit: formSummitHandler,
+            isValid,
+          }) => (
+            <>
+              <InputBox
+                label={'Email'}
+                placeholder='Email'
+                onChangeText={handleChange(EMAIL)}
+                value={formValues[EMAIL] || ''}
+                errorMessage={
+                  formErrors[EMAIL] && touchedState[EMAIL]
+                    ? formErrors[EMAIL]
+                    : ''
+                }
+              />
 
-        <Pressable style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login</Text>
-        </Pressable>
+              <View style={styles.inputWrapper}>
+                <InputBox
+                  label={'Your Password'}
+                  placeholder='Password'
+                  onChangeText={handleChange(PASSWORD)}
+                  value={formValues[PASSWORD] || ''}
+                  errorMessage={
+                    formErrors[PASSWORD] && touchedState[PASSWORD]
+                      ? formErrors[PASSWORD]
+                      : ''
+                  }
+                  secureTextEntry
+                />
+                <TouchableOpacity
+                  style={{
+                    width: '100%',
+                  }}
+                  onPress={() => navigation.navigate('ForgotPassword')}
+                >
+                  <Text style={{ color: 'blue', textAlign: 'right' }}>
+                    Forgot Password
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <Pressable
+                disabled={!isValid}
+                style={styles.button}
+                onPress={formSummitHandler}
+              >
+                <Text style={styles.buttonText}>Login</Text>
+              </Pressable>
+            </>
+          )}
+        </Formik>
 
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
           <Text style={[styles.signupWrapper, { color: 'blue' }]}>
@@ -75,7 +118,6 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     width: '85%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -91,15 +133,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
   },
-  input: {
-    width: '100%',
-    fontSize: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 2,
-  },
+
   button: {
     width: '85%',
     backgroundColor: '#333',

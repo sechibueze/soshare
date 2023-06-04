@@ -1,20 +1,20 @@
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View, Text } from 'react-native';
-// import LoginScreen from './app/screens/auth/Login';
-// import RegisterScreen from './app/screens/auth/Register';
-// import ForgotPasswordScreen from './app/screens/auth/ForgotPassword';
-// import AccountScreen from './app/screens/AccountScreen';
-// import SettingScreen from './app/screens/SettingScreen';
-// import Tabs from './app/components/navigation/Tabs';
+import { Provider } from 'react-redux';
 import AppStack from './app/navigation';
+import { store } from './app/redux/store';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
 
-const Stack = createNativeStackNavigator();
+let persistor = persistStore(store);
 export default function App() {
   return (
-    <NavigationContainer>
-      <AppStack />
-    </NavigationContainer>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <NavigationContainer>
+          <AppStack />
+        </NavigationContainer>
+      </PersistGate>
+    </Provider>
   );
 }

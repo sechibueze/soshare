@@ -7,11 +7,14 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
-import ScreenWrapper from '../../components/common/ScreenWrapper';
-import InputBox from '../../components/common/InputBox';
+import ScreenWrapper from 'components/common/ScreenWrapper';
+import InputBox from 'components/common/InputBox';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../redux/auth/authSlice';
+import { loginUser } from 'redux/auth/authSlice';
+import { STYLES } from 'config/styles.config';
+import ButtonPress from 'components/common/ButtonPress';
 const EMAIL = 'email';
 const PASSWORD = 'password';
 
@@ -32,100 +35,110 @@ const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   return (
     <ScreenWrapper>
-      <View style={styles.container}>
-        <View>
-          <Text style={styles.headerText}>Login </Text>
-        </View>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.container}>
+          <Text
+            style={{
+              width: '100%',
+              fontFamily: 'font__bold',
+              textAlign: 'left',
+              fontSize: 38,
+              color: STYLES.color.primary,
+            }}
+          >
+            Login{' '}
+          </Text>
 
-        <Formik
-          validationSchema={loginSchema}
-          onSubmit={(data) => {
-            dispatch(
-              loginUser({
-                full_name: data.email,
-              })
-            );
-            navigation.navigate('Accounts');
-          }}
-          initialValues={initialFormState}
-        >
-          {({
-            values: formValues,
-            errors: formErrors,
-            touched: touchedState,
-            handleChange,
-            handleSubmit: formSummitHandler,
-            isValid,
-          }) => (
-            <>
-              <InputBox
-                label={'Email'}
-                placeholder='Email'
-                onChangeText={handleChange(EMAIL)}
-                value={formValues[EMAIL] || ''}
-                errorMessage={
-                  formErrors[EMAIL] && touchedState[EMAIL]
-                    ? formErrors[EMAIL]
-                    : ''
-                }
-              />
-
-              <View style={styles.inputWrapper}>
+          <Formik
+            validationSchema={loginSchema}
+            onSubmit={(data) => {
+              dispatch(
+                loginUser({
+                  full_name: data.email,
+                })
+              );
+              navigation.navigate('Accounts');
+            }}
+            initialValues={initialFormState}
+          >
+            {({
+              values: formValues,
+              errors: formErrors,
+              touched: touchedState,
+              handleChange,
+              handleSubmit: formSummitHandler,
+              isValid,
+            }) => (
+              <>
                 <InputBox
-                  label={'Your Password'}
-                  placeholder='Password'
-                  onChangeText={handleChange(PASSWORD)}
-                  value={formValues[PASSWORD] || ''}
+                  label={'Email'}
+                  placeholder='Email'
+                  onChangeText={handleChange(EMAIL)}
+                  value={formValues[EMAIL] || ''}
                   errorMessage={
-                    formErrors[PASSWORD] && touchedState[PASSWORD]
-                      ? formErrors[PASSWORD]
+                    formErrors[EMAIL] && touchedState[EMAIL]
+                      ? formErrors[EMAIL]
                       : ''
                   }
-                  secureTextEntry
                 />
-                <TouchableOpacity
-                  style={{
-                    width: '100%',
-                  }}
-                  onPress={() => navigation.navigate('ForgotPassword')}
-                >
-                  <Text style={{ color: 'blue', textAlign: 'right' }}>
-                    Forgot Password
-                  </Text>
-                </TouchableOpacity>
-              </View>
 
-              <Pressable
-                disabled={!isValid}
-                style={styles.button}
-                onPress={formSummitHandler}
-              >
-                <Text style={styles.buttonText}>Login</Text>
-              </Pressable>
-            </>
-          )}
-        </Formik>
+                <View style={styles.inputWrapper}>
+                  <InputBox
+                    label={'Your Password'}
+                    placeholder='Password'
+                    onChangeText={handleChange(PASSWORD)}
+                    value={formValues[PASSWORD] || ''}
+                    errorMessage={
+                      formErrors[PASSWORD] && touchedState[PASSWORD]
+                        ? formErrors[PASSWORD]
+                        : ''
+                    }
+                    secureTextEntry
+                  />
+                  <TouchableOpacity
+                    style={{
+                      width: '100%',
+                    }}
+                    onPress={() => navigation.navigate('ForgotPassword')}
+                  >
+                    <Text style={{ color: 'blue', textAlign: 'right' }}>
+                      Forgot Password
+                    </Text>
+                  </TouchableOpacity>
+                </View>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-          <Text style={[styles.signupWrapper, { color: 'blue' }]}>
-            New user ? Create account
-          </Text>
-        </TouchableOpacity>
-      </View>
+                <ButtonPress
+                  style={{ marginVertical: 30 }}
+                  onPress={formSummitHandler}
+                  label={'Login'}
+                />
+              </>
+            )}
+          </Formik>
+
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+            <Text style={[styles.signupWrapper, { color: 'blue' }]}>
+              New user ? Create account
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    width: '100%',
+  },
   container: {
-    width: '85%',
+    flex: 1,
+    width: '90%',
     justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 30,
+    alignSelf: 'center',
+    rowGap: 10,
     padding: 16,
-    borderColor: 'red',
-    borderWidth: 3,
   },
   inputWrapper: {
     width: '100%',
@@ -134,26 +147,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
 
-  button: {
-    width: '85%',
-    backgroundColor: '#333',
-    padding: 12,
-    borderRadius: 4,
-  },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
-  },
-  headerText: {
-    color: '#555',
-    textAlign: 'center',
-    fontSize: 28,
-    fontWeight: 'bold',
-  },
   signupWrapper: {
-    width: '100%',
-    paddingTop: 20,
+    color: STYLES.color.primary,
     textAlign: 'center',
+    fontSize: 14,
+    fontWeight: 500,
+    fontFamily: STYLES.font.font__medium,
   },
 });
 

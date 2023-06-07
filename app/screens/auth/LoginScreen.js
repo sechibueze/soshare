@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {
   View,
-  Pressable,
   Text,
   StyleSheet,
   TouchableOpacity,
@@ -12,7 +11,7 @@ import {
 import ScreenWrapper from 'components/common/ScreenWrapper';
 import InputBox from 'components/common/InputBox';
 import { useDispatch } from 'react-redux';
-import { loginUser } from 'redux/auth/authSlice';
+import { loginUser } from 'appstate/auth/authSlice';
 import { STYLES } from 'config/styles.config';
 import ButtonPress from 'components/common/ButtonPress';
 const EMAIL = 'email';

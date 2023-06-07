@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import {
   View,
-  Pressable,
   Text,
   StyleSheet,
   TouchableOpacity,
@@ -12,9 +11,9 @@ import {
 import ScreenWrapper from 'components/common/ScreenWrapper';
 import InputBox from 'components/common/InputBox';
 import CheckBoxField from 'react-native-bouncy-checkbox';
-import { registerUser } from 'redux/auth/authSlice';
+import { registerUser } from 'appstate/auth/authSlice';
 import { STYLES } from 'config/styles.config';
-import ButtonPress from '../../components/common/ButtonPress';
+import ButtonPress from 'components/common/ButtonPress';
 const EMAIL = 'email';
 const PASSWORD = 'password';
 const FULL_NAME = 'full_name';

@@ -11,13 +11,6 @@ import ProfileNavigation from '../profile';
 
 const PostsTab = createBottomTabNavigator();
 
-const Tab = ({ navigation }) => {
-  return (
-    <Pressable onPress={() => navigation.navigate('CreatePost')}>
-      <Text>Hey</Text>
-    </Pressable>
-  );
-};
 export const PostsTabNavigation = () => {
   return (
     <PostsTab.Navigator
@@ -49,7 +42,6 @@ export const PostsTabNavigation = () => {
       <PostsTab.Screen
         options={{
           tabBarShowLabel: false,
-          // tabBarButton: (props) => <Tab {...props} />,
           tabBarLabelStyle: {
             display: 'none',
           },

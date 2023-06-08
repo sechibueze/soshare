@@ -1,7 +1,7 @@
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { POSTS } from 'appstate/_data';
-import PostCard from '../../components/posts/PostCard';
+import PostCard from 'components/posts/PostCard';
 
 export default function PostFeedScreen({ navigation }) {
   return (

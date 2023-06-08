@@ -44,15 +44,6 @@ const AuthDrawerNavigation = () => {
     >
       <AuthDrawer.Screen
         options={{
-          drawerLabel: 'Posts',
-          header: (props) => <AuthHeader {...props} />,
-          drawerIcon: (props) => <MaterialIcons name='post-add' {...props} />,
-        }}
-        name='PostStack'
-        component={PostStackNavigation}
-      />
-      <AuthDrawer.Screen
-        options={{
           drawerIcon: ({ color, focused, size }) => (
             <MaterialCommunityIcons
               name='view-dashboard-outline'
@@ -63,6 +54,15 @@ const AuthDrawerNavigation = () => {
         }}
         name='Dashboard'
         component={DashboardScreen}
+      />
+      <AuthDrawer.Screen
+        options={{
+          drawerLabel: 'Posts',
+          header: (props) => <AuthHeader {...props} />,
+          drawerIcon: (props) => <MaterialIcons name='post-add' {...props} />,
+        }}
+        name='PostStack'
+        component={PostStackNavigation}
       />
       <AuthDrawer.Screen
         options={{
@@ -92,6 +92,8 @@ export default function AppStack() {
         },
       }}
     >
+      <Stack.Screen name='Login' component={LoginScreen} />
+
       <Stack.Screen
         options={{
           headerShown: false,
@@ -107,7 +109,6 @@ export default function AppStack() {
         name='Register'
         component={RegisterScreen}
       />
-      <Stack.Screen name='Login' component={LoginScreen} />
       <Stack.Screen name='ForgotPassword' component={ForgotPasswordScreen} />
     </Stack.Navigator>
   );

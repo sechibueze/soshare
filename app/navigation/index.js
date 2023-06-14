@@ -44,19 +44,6 @@ const AuthDrawerNavigation = () => {
     >
       <AuthDrawer.Screen
         options={{
-          drawerIcon: ({ color, focused, size }) => (
-            <MaterialCommunityIcons
-              name='view-dashboard-outline'
-              size={size}
-              color={color}
-            />
-          ),
-        }}
-        name='Dashboard'
-        component={DashboardScreen}
-      />
-      <AuthDrawer.Screen
-        options={{
           drawerLabel: 'Posts',
           header: (props) => <AuthHeader {...props} />,
           drawerIcon: (props) => <MaterialIcons name='post-add' {...props} />,
@@ -71,6 +58,19 @@ const AuthDrawerNavigation = () => {
         }}
         name='Profile'
         component={ProfileNavigation}
+      />
+      <AuthDrawer.Screen
+        options={{
+          drawerIcon: ({ color, focused, size }) => (
+            <MaterialCommunityIcons
+              name='view-dashboard-outline'
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+        name='Dashboard'
+        component={DashboardScreen}
       />
     </AuthDrawer.Navigator>
   );

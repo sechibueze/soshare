@@ -2,7 +2,14 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
-import { View, Text, ImageBackground, Image, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  ImageBackground,
+  Image,
+  StyleSheet,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { STYLES } from 'config/styles.config';
 import { MaterialCommunityIcons, AntDesign, Entypo } from '@expo/vector-icons';
 
@@ -58,21 +65,26 @@ export default function AuthSidebarContent(props) {
       <View
         style={{
           width: '100%',
-          height: 120,
+          height: 150,
           padding: 12,
           rowGap: 12,
           justifyContent: 'flex-start',
           alignItems: 'flex-start',
+          backgroundColor: '#eee',
         }}
       >
         <View style={styles.lineWrapper}>
           <Entypo name='share' size={24} color='black' />
           <Text style={styles.metaText}>Tell your friends </Text>
         </View>
-        <View style={styles.lineWrapper}>
-          <AntDesign name='logout' size={24} color='black' />
-          <Text style={styles.metaText}>Sign out </Text>
-        </View>
+        <TouchableWithoutFeedback
+          onPress={() => props.navigation.navigate('Login')}
+        >
+          <View style={styles.lineWrapper}>
+            <AntDesign name='logout' size={24} color='black' />
+            <Text style={styles.metaText}>Sign out </Text>
+          </View>
+        </TouchableWithoutFeedback>
       </View>
     </View>
   );

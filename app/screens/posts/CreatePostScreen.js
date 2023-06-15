@@ -16,7 +16,8 @@ import ScreenWrapper from 'components/common/ScreenWrapper';
 import { AntDesign } from '@expo/vector-icons';
 export default function CreatePostScreen({ navigation }) {
   const [content, setContent] = useState('');
-  const [photo, setPhoto] = useState();
+  const [photo, setPhoto] = useState('');
+  const [isVisibleModal, setIsVisibleModal] = useState(true);
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -30,7 +31,10 @@ export default function CreatePostScreen({ navigation }) {
     if (result.canceled) return;
     setPhoto(result.assets[0]);
   };
-  const closeModal = () => navigation.navigate('Posts');
+  const closeModal = () => {
+    setIsVisibleModal(false);
+    navigation.navigate('PostFeed');
+  };
 
   const handleSubmitPost = (image, body = {}) => {
     const fd = new FormData();
@@ -45,7 +49,11 @@ export default function CreatePostScreen({ navigation }) {
   const isValidPost = photo || content.trim().length;
   return (
     <ScreenWrapper>
-      <Modal animationType='slide' onRequestClose={closeModal}>
+      <Modal
+        animationType='slide'
+        visible={isVisibleModal}
+        onRequestClose={closeModal}
+      >
         {/* Header */}
         <View
           style={{

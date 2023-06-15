@@ -45,7 +45,7 @@ const LoginScreen = ({ navigation }) => {
               color: STYLES.color.primary,
             }}
           >
-            Login{' '}
+            Login
           </Text>
 
           <Formik

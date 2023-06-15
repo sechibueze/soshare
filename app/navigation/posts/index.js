@@ -4,10 +4,11 @@ import ProfileDetailsScreen from 'screens/profile/ProfileDetailsScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 import { STYLES } from 'config/styles.config';
-import CreatePostScreen from '../../screens/posts/CreatePostScreen';
+import CreatePostScreen from 'screens/posts/CreatePostScreen';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, Text, Pressable } from 'react-native';
 import ProfileNavigation from '../profile';
+import NotificationsScreen from 'screens/NotificationsScreen';
 
 const PostsTab = createBottomTabNavigator();
 
@@ -70,7 +71,7 @@ export const PostsTabNavigation = () => {
           ),
         }}
         name='Notifications'
-        component={CreatePostScreen}
+        component={NotificationsScreen}
       />
     </PostsTab.Navigator>
   );

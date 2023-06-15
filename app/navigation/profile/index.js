@@ -1,22 +1,22 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ProfileDetailsScreen from 'screens/profile/ProfileDetailsScreen';
 import SettingScreen from 'screens/SettingScreen';
 import AuthHeader from 'components/common/AuthHeader';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const ProfileBottomTabs = createBottomTabNavigator();
+const ProfileStack = createNativeStackNavigator();
 
 export default function ProfileNavigation() {
   return (
-    <ProfileBottomTabs.Navigator
+    <ProfileStack.Navigator
       screenOptions={{
         header: (props) => <AuthHeader {...props} />,
       }}
     >
-      <ProfileBottomTabs.Screen
+      <ProfileStack.Screen
         name='ProfileDetails'
         component={ProfileDetailsScreen}
       />
-      <ProfileBottomTabs.Screen name='Settings' component={SettingScreen} />
-    </ProfileBottomTabs.Navigator>
+      <ProfileStack.Screen name='Settings' component={SettingScreen} />
+    </ProfileStack.Navigator>
   );
 }

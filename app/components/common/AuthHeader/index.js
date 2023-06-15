@@ -1,11 +1,16 @@
-import { View, Text, StatusBar, Image } from 'react-native';
+import {
+  View,
+  Text,
+  StatusBar,
+  Image,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import React from 'react';
 import { STYLES } from 'config/styles.config';
 import { Ionicons } from '@expo/vector-icons';
-import {
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-} from 'react-native-gesture-handler';
+
+import { MaterialIcons } from '@expo/vector-icons';
 export default function AuthHeader({ navigation }) {
   return (
     <View
@@ -20,18 +25,19 @@ export default function AuthHeader({ navigation }) {
         paddingVertical: 10,
       }}
     >
-      <TouchableWithoutFeedback>
-        <Image
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 50,
-            borderWidth: 2,
-            borderColor: STYLES.color.primary,
-          }}
-          source={require('assets/icon.png')}
-        />
+      <TouchableWithoutFeedback onPress={() => navigation.openDrawer()}>
+        <MaterialIcons name='menu' size={36} color={STYLES.color.primary} />
       </TouchableWithoutFeedback>
+      <Image
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: 50,
+          borderWidth: 2,
+          borderColor: STYLES.color.primary,
+        }}
+        source={require('assets/icon.png')}
+      />
       <View
         style={{
           flexDirection: 'row',
@@ -40,8 +46,8 @@ export default function AuthHeader({ navigation }) {
           alignItems: 'center',
         }}
       >
-        <Ionicons name='notifications' size={24} color={STYLES.color.primary} />
-        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+        {/* <Ionicons name='notifications' size={24} color={STYLES.color.primary} /> */}
+        <TouchableOpacity>
           <Image
             style={{
               width: 40,

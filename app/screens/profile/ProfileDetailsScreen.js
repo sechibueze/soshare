@@ -11,7 +11,6 @@ import { STYLES } from 'config/styles.config';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { AntDesign } from '@expo/vector-icons';
 import { useState } from 'react';
-import { set } from 'react-native-reanimated';
 export default function ProfileDetailsScreen() {
   const [visibleModal, setVisibleModal] = useState(false);
   return (
@@ -31,6 +30,7 @@ export default function ProfileDetailsScreen() {
             <AntDesign name='close' size={24} color='black' />
           </TouchableHighlight>
         </View>
+        {/* Add Form details here */}
       </Modal>
       {/* Profile Container */}
       <View
@@ -52,8 +52,8 @@ export default function ProfileDetailsScreen() {
           }}
         >
           <Image
-            source={{ uri: 'https://picsum.photos/200' }}
-            style={{ width: 200 }}
+            source={require('assets/img/me.jpg')}
+            style={{ width: '100%', height: '100%', borderRadius: 50 }}
           />
         </View>
         <View
@@ -88,6 +88,7 @@ export default function ProfileDetailsScreen() {
         }}
       >
         <TouchableHighlight
+          underlayColor={'#eee'}
           style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -97,7 +98,7 @@ export default function ProfileDetailsScreen() {
             borderRadius: 50,
             backgroundColor: '#eeeccc',
           }}
-          onPress={() => setVisibleModal(true)}
+          onPress={() => setVisibleModal(false)}
         >
           <>
             <Text>Edit profile</Text>

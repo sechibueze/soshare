@@ -15,6 +15,7 @@ import {
 } from '@expo/vector-icons';
 import { View, Text } from 'react-native';
 import AuthHeader from 'components/common/AuthHeader';
+import MediaScreen from '../screens/MediaScreen';
 
 // ===================
 const AuthDrawer = createDrawerNavigator();
@@ -93,6 +94,7 @@ export default function AppStack() {
       }}
     >
       <Stack.Screen name='Login' component={LoginScreen} />
+      <Stack.Screen name='Media' component={MediaScreen} />
 
       <Stack.Screen
         options={{

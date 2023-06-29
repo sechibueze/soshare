@@ -1,17 +1,19 @@
 # Soshare
 
-> Sochare - apltform to share ideas
+> Sochare - a platform to share ideas
+
+Ensure you have Nodejs and npm installed in your system
 
 Clone the repository
 
 ```
-git clone
+git clone https://github.com/sechibueze/soshare.git
 ```
 
-Install dependences
+Install dependences and start app
 
 ```bash
-npm install
+cd soshare && npm install && npm start
 ```
 
 ### Resources

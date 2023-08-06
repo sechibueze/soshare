@@ -16,6 +16,7 @@ import {
 import { View, Text } from 'react-native';
 import AuthHeader from 'components/common/AuthHeader';
 import MediaScreen from '../screens/MediaScreen';
+import { useSelector } from 'react-redux';
 
 // ===================
 const AuthDrawer = createDrawerNavigator();
@@ -81,6 +82,7 @@ const AuthDrawerNavigation = () => {
 const Stack = createNativeStackNavigator();
 
 export default function AppStack() {
+  const auth = useSelector((state) => state.auth);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -93,25 +95,32 @@ export default function AppStack() {
         },
       }}
     >
-      <Stack.Screen name='Login' component={LoginScreen} />
-      <Stack.Screen name='Media' component={MediaScreen} />
-
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-        name='Accounts'
-        component={AuthDrawerNavigation}
-      />
-
-      <Stack.Screen
-        options={{
-          title: 'Create Account',
-        }}
-        name='Register'
-        component={RegisterScreen}
-      />
-      <Stack.Screen name='ForgotPassword' component={ForgotPasswordScreen} />
+      {!!auth.isLoggedIn ? (
+        <>
+          <Stack.Screen
+            options={{
+              headerShown: false,
+            }}
+            name='Accounts'
+            component={AuthDrawerNavigation}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name='Login' component={LoginScreen} />
+          <Stack.Screen
+            options={{
+              title: 'Create Account',
+            }}
+            name='Register'
+            component={RegisterScreen}
+          />
+          <Stack.Screen
+            name='ForgotPassword'
+            component={ForgotPasswordScreen}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 }

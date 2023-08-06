@@ -2,10 +2,10 @@ import { Pressable, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import { STYLES } from 'config/styles.config';
 
-export default function ButtonPress({ label, style, onPress, ...rest }) {
+export default function ButtonPress({ label, style, ...rest }) {
   return (
-    <Pressable style={[styles.button, style]} onPress={onPress} {...rest}>
-      {!!label && <Text style={styles.buttonText}>{label}</Text>}
+    <Pressable style={[styles.button, style]} {...rest}>
+      {!!label && <Text style={styles.buttonText}>{label} </Text>}
     </Pressable>
   );
 }

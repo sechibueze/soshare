@@ -11,9 +11,11 @@ import {
 import ScreenWrapper from 'components/common/ScreenWrapper';
 import InputBox from 'components/common/InputBox';
 import CheckBoxField from 'react-native-bouncy-checkbox';
-import { registerUser } from 'appstate/auth/authSlice';
 import { STYLES } from 'config/styles.config';
 import ButtonPress from 'components/common/ButtonPress';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createDocument } from 'backend/database.firestore';
+import { firebaseAuthConfig } from 'backend/firebase.config';
 const EMAIL = 'email';
 const PASSWORD = 'password';
 const FULL_NAME = 'full_name';
@@ -44,8 +46,40 @@ const newUserSchema = Yup.object().shape({
     'You must accept the terms and conditions'
   ),
 });
+
 const Register = ({ navigation }) => {
   const [agree, setAgree] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handeRegister = async (user) => {
+    setErrorMessage('');
+    setLoading(true);
+    createUserWithEmailAndPassword(
+      firebaseAuthConfig,
+      user[EMAIL],
+      user[PASSWORD]
+    )
+      .then(async (result) => {
+        // Insert user in db
+        const newUser = {
+          id: result.user.uid,
+          [FULL_NAME]: user[FULL_NAME],
+          [AGREE_TO_TERMS]: user[AGREE_TO_TERMS],
+          [EMAIL]: user[EMAIL],
+        };
+        try {
+          await createDocument('users', newUser);
+          navigation.navigate('Login');
+        } catch (error) {
+          setErrorMessage('User created but not saved: ', error.message);
+        }
+      })
+      .catch((err) => {
+        setErrorMessage('Failed to create user : ');
+      });
+    setLoading(false);
+  };
   return (
     <ScrollView>
       <ScreenWrapper>
@@ -61,11 +95,12 @@ const Register = ({ navigation }) => {
           >
             Sign up
           </Text>
+          {errorMessage && <Text>{errorMessage}</Text>}
 
           <Formik
-            validationSchema={newUserSchema}
-            onSubmit={() => {
-              navigation.navigate('Login');
+            // validationSchema={newUserSchema}
+            onSubmit={async (data) => {
+              await handeRegister(data);
             }}
             initialValues={initialFormState}
           >
@@ -111,7 +146,7 @@ const Register = ({ navigation }) => {
                       ? formErrors[PASSWORD]
                       : ''
                   }
-                  secureTextEntry
+                  // secureTextEntry
                 />
                 <InputBox
                   label={'Your Confirm Password'}
@@ -124,7 +159,7 @@ const Register = ({ navigation }) => {
                       ? formErrors[CONFIRM_PASSWORD]
                       : ''
                   }
-                  secureTextEntry
+                  // secureTextEntry
                 />
 
                 <CheckBoxField
@@ -155,7 +190,7 @@ const Register = ({ navigation }) => {
 
                 <ButtonPress
                   style={{ marginVertical: 30 }}
-                  label={'Register'}
+                  label={loading ? 'Loading...' : 'Register'}
                   onPress={formSummitHandler}
                 />
               </>

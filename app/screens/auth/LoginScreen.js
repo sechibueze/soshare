@@ -10,10 +10,11 @@ import {
 } from 'react-native';
 import ScreenWrapper from 'components/common/ScreenWrapper';
 import InputBox from 'components/common/InputBox';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from 'appstate/auth/authSlice';
 import { STYLES } from 'config/styles.config';
 import ButtonPress from 'components/common/ButtonPress';
+import { loginUserReq } from '../../appstate/auth/authAction';
 const EMAIL = 'email';
 const PASSWORD = 'password';
 
@@ -32,6 +33,8 @@ const loginSchema = Yup.object().shape({
 });
 const LoginScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+
   return (
     <ScreenWrapper>
       <ScrollView style={styles.scrollView}>
@@ -52,11 +55,11 @@ const LoginScreen = ({ navigation }) => {
             validationSchema={loginSchema}
             onSubmit={(data) => {
               dispatch(
-                loginUser({
-                  full_name: data.email,
+                loginUserReq({
+                  [EMAIL]: data[EMAIL],
+                  [PASSWORD]: data[PASSWORD],
                 })
               );
-              navigation.navigate('Accounts');
             }}
             initialValues={initialFormState}
           >
@@ -109,7 +112,7 @@ const LoginScreen = ({ navigation }) => {
                 <ButtonPress
                   style={{ marginVertical: 30 }}
                   onPress={formSummitHandler}
-                  label={'Login'}
+                  label={auth.loading ? 'Loading...' : 'Login'}
                 />
               </>
             )}

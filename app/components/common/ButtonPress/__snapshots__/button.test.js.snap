@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`It renders It renders 1`] = `
+exports[`It renders It renders unit 1`] = `
 <View
   accessibilityState={
     {

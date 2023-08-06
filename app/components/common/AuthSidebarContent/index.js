@@ -12,8 +12,14 @@ import {
 } from 'react-native';
 import { STYLES } from 'config/styles.config';
 import { MaterialCommunityIcons, AntDesign, Entypo } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import { loginUser } from 'appstate/auth/authSlice';
 
 export default function AuthSidebarContent(props) {
+  const dispatch = useDispatch();
+  const logoutUser = () => {
+    dispatch(loginUser(false));
+  };
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground
@@ -77,9 +83,7 @@ export default function AuthSidebarContent(props) {
           <Entypo name='share' size={24} color='black' />
           <Text style={styles.metaText}>Tell your friends </Text>
         </View>
-        <TouchableWithoutFeedback
-          onPress={() => props.navigation.navigate('Login')}
-        >
+        <TouchableWithoutFeedback onPress={() => logoutUser()}>
           <View style={styles.lineWrapper}>
             <AntDesign name='logout' size={24} color='black' />
             <Text style={styles.metaText}>Sign out </Text>

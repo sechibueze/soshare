@@ -5,16 +5,15 @@ export default function MediaScreen() {
   const [sound, setSound] = useState();
   const [status, setStatus] = useState({});
   const video = useRef(null);
-  const playSound = async () => {
-    console.log('Loading sound...');
-    const { sound } = await Audio.Sound.createAsync(
-      require('../assets/sound.mp3')
-    );
+  // const playSound = async () => {
+  //   const { sound } = await Audio.Sound.createAsync(
+  //     require('../assets/sound.mp3')
+  //   );
 
-    setSound(sound);
-    console.log('Playing sound...');
-    sound.playAsync();
-  };
+  //   setSound(sound);
+  //   console.log('Playing sound...');
+  //   sound.playAsync();
+  // };
 
   useEffect(() => {
     return sound ? () => sound.unloadAsync() : undefined;
@@ -22,7 +21,7 @@ export default function MediaScreen() {
   return (
     <View>
       <Text>MediaScreen</Text>
-      <Button title='Play music' onPress={playSound} />
+      {/* <Button title='Play music' onPress={playSound} /> */}
 
       <Video
         style={{ width: '80%', height: 170 }}

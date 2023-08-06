@@ -7,14 +7,16 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage: AsyncStorage,
+  whitelist: ['isLoggedIn'],
 };
+const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 
-const rootReducer = combineReducers({
-  auth: authReducer,
+const appReducers = combineReducers({
+  auth: persistedAuthReducer,
 });
-const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: appReducers,
+  devTools: process.env.NODE_ENV === 'development',
   middleware: [thunk],
 });

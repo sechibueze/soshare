@@ -13,10 +13,14 @@ import {
   Feather,
   MaterialIcons,
 } from '@expo/vector-icons';
-import { View, Text } from 'react-native';
 import AuthHeader from 'components/common/AuthHeader';
-import MediaScreen from '../screens/MediaScreen';
-import { useSelector } from 'react-redux';
+import {
+  FORGOT_PASSWORD_SCREEN,
+  HOME_SCREEN,
+  LOGIN_SCREEN,
+  REGISTER_SCREEN,
+} from '../config/screens.config';
+import { getAuth } from 'firebase/auth';
 
 // ===================
 const AuthDrawer = createDrawerNavigator();
@@ -78,11 +82,10 @@ const AuthDrawerNavigation = () => {
   );
 };
 
-// ==================
 const Stack = createNativeStackNavigator();
 
 export default function AppStack() {
-  const auth = useSelector((state) => state.auth);
+  const currentUser = getAuth().currentUser;
   return (
     <Stack.Navigator
       screenOptions={{
@@ -95,28 +98,26 @@ export default function AppStack() {
         },
       }}
     >
-      {!!auth.isLoggedIn ? (
-        <>
-          <Stack.Screen
-            options={{
-              headerShown: false,
-            }}
-            name='Accounts'
-            component={AuthDrawerNavigation}
-          />
-        </>
+      {currentUser ? (
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name={HOME_SCREEN}
+          component={AuthDrawerNavigation}
+        />
       ) : (
         <>
-          <Stack.Screen name='Login' component={LoginScreen} />
+          <Stack.Screen name={LOGIN_SCREEN} component={LoginScreen} />
           <Stack.Screen
             options={{
               title: 'Create Account',
             }}
-            name='Register'
+            name={REGISTER_SCREEN}
             component={RegisterScreen}
           />
           <Stack.Screen
-            name='ForgotPassword'
+            name={FORGOT_PASSWORD_SCREEN}
             component={ForgotPasswordScreen}
           />
         </>

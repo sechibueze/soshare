@@ -7,11 +7,20 @@ import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { firebaseAuthConfig } from './app/backend/firebase.config';
 
-// SplashScreen.preventAutoHideAsync();
+SplashScreen.preventAutoHideAsync();
 let persistor = persistStore(store);
 export default function App() {
+  const [, setCurrentUser] = useState();
+  // useEffect(() => {
+  //   const subscriber = onAuthStateChanged(firebaseAuthConfig, (user) => {
+  //     setCurrentUser(user);
+  //   });
+  //   return subscriber;
+  // }, []);
   const [boldFontLoaded] = useFonts({
     font__bold: require('./app/assets/fonts/Inter-Bold.ttf'),
   });
@@ -19,7 +28,6 @@ export default function App() {
     font__medium: require('./app/assets/fonts/Inter-Medium.ttf'),
   });
   const [regularFontLoaded] = useFonts({
-    font__medium: require('./app/assets/fonts/Inter-Medium.ttf'),
     font__regular: require('./app/assets/fonts/Inter-Regular.ttf'),
   });
 
@@ -35,11 +43,11 @@ export default function App() {
   }
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <NavigationContainer>
-          <AppStack />
-        </NavigationContainer>
-      </PersistGate>
+      {/* <PersistGate loading={null} persistor={persistor}> */}
+      <NavigationContainer>
+        <AppStack />
+      </NavigationContainer>
+      {/* </PersistGate> */}
     </Provider>
   );
 }

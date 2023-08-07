@@ -10,11 +10,11 @@ import {
 } from 'react-native';
 import ScreenWrapper from 'components/common/ScreenWrapper';
 import InputBox from 'components/common/InputBox';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from 'appstate/auth/authSlice';
 import { STYLES } from 'config/styles.config';
 import ButtonPress from 'components/common/ButtonPress';
-import { loginUserReq } from '../../appstate/auth/authAction';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { firebaseAuthConfig } from '../../backend/firebase.config';
+import { HOME_SCREEN } from '../../config/screens.config';
 const EMAIL = 'email';
 const PASSWORD = 'password';
 
@@ -32,9 +32,23 @@ const loginSchema = Yup.object().shape({
     .required('Password is required'),
 });
 const LoginScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
+  const handleLogin = (credentials) => {
+    setErrorMessage('');
+    setLoading(true);
+    const { email, password } = credentials;
+    signInWithEmailAndPassword(firebaseAuthConfig, email, password)
+      .then(({ user }) => {
+        setLoading(false);
+        navigation.navigate(HOME_SCREEN);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setErrorMessage(`${error.code}: ${error.message}`);
+      });
+  };
   return (
     <ScreenWrapper>
       <ScrollView style={styles.scrollView}>
@@ -51,16 +65,10 @@ const LoginScreen = ({ navigation }) => {
             Login
           </Text>
 
+          {errorMessage && <Text>{errorMessage}</Text>}
           <Formik
             validationSchema={loginSchema}
-            onSubmit={(data) => {
-              dispatch(
-                loginUserReq({
-                  [EMAIL]: data[EMAIL],
-                  [PASSWORD]: data[PASSWORD],
-                })
-              );
-            }}
+            onSubmit={handleLogin}
             initialValues={initialFormState}
           >
             {({
@@ -112,7 +120,7 @@ const LoginScreen = ({ navigation }) => {
                 <ButtonPress
                   style={{ marginVertical: 30 }}
                   onPress={formSummitHandler}
-                  label={auth.loading ? 'Loading...' : 'Login'}
+                  label={loading ? 'Loading...' : 'Login'}
                 />
               </>
             )}

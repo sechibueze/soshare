@@ -11,14 +11,18 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { STYLES } from 'config/styles.config';
-import { MaterialCommunityIcons, AntDesign, Entypo } from '@expo/vector-icons';
-import { useDispatch } from 'react-redux';
-import { loginUser } from 'appstate/auth/authSlice';
+import { AntDesign, Entypo } from '@expo/vector-icons';
+
+import { getAuth, signOut } from 'firebase/auth';
+import { LOGIN_SCREEN } from 'config/screens.config';
 
 export default function AuthSidebarContent(props) {
-  const dispatch = useDispatch();
+  const auth = getAuth();
+  // const { displayName } = auth.currentUser || {};
   const logoutUser = () => {
-    dispatch(loginUser(false));
+    signOut(auth).then(() => {
+      props.navigation.navigate(LOGIN_SCREEN);
+    });
   };
   return (
     <View style={{ flex: 1 }}>

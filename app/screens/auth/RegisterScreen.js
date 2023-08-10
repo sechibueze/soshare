@@ -13,9 +13,16 @@ import InputBox from 'components/common/InputBox';
 import CheckBoxField from 'react-native-bouncy-checkbox';
 import { STYLES } from 'config/styles.config';
 import ButtonPress from 'components/common/ButtonPress';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { createDocument } from 'backend/database.firestore';
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from 'firebase/auth';
 import { firebaseAuthConfig } from 'backend/firebase.config';
+import {
+  FORGOT_PASSWORD_SCREEN,
+  LOGIN_SCREEN,
+} from '../../config/screens.config';
 const EMAIL = 'email';
 const PASSWORD = 'password';
 const FULL_NAME = 'full_name';
@@ -60,17 +67,14 @@ const Register = ({ navigation }) => {
       user[EMAIL],
       user[PASSWORD]
     )
-      .then(async (result) => {
-        // Insert user in db
-        const newUser = {
-          id: result.user.uid,
-          [FULL_NAME]: user[FULL_NAME],
-          [AGREE_TO_TERMS]: user[AGREE_TO_TERMS],
-          [EMAIL]: user[EMAIL],
-        };
+      .then(async ({ user: userCredentials }) => {
         try {
-          await createDocument('users', newUser);
-          navigation.navigate('Login');
+          await sendEmailVerification(userCredentials);
+          await updateProfile(userCredentials, {
+            displayName: user[FULL_NAME],
+          });
+
+          navigation.navigate(LOGIN_SCREEN);
         } catch (error) {
           setErrorMessage('User created but not saved: ', error.message);
         }
@@ -87,7 +91,8 @@ const Register = ({ navigation }) => {
           <Text
             style={{
               width: '100%',
-              fontFamily: 'font__bold',
+              fontFamily: STYLES.font.font__bold,
+              fontWeight: 'bold',
               textAlign: 'left',
               fontSize: 38,
               color: STYLES.color.primary,
@@ -98,7 +103,7 @@ const Register = ({ navigation }) => {
           {errorMessage && <Text>{errorMessage}</Text>}
 
           <Formik
-            // validationSchema={newUserSchema}
+            validationSchema={newUserSchema}
             onSubmit={async (data) => {
               await handeRegister(data);
             }}
@@ -159,7 +164,7 @@ const Register = ({ navigation }) => {
                       ? formErrors[CONFIRM_PASSWORD]
                       : ''
                   }
-                  // secureTextEntry
+                  secureTextEntry
                 />
 
                 <CheckBoxField
@@ -206,7 +211,7 @@ const Register = ({ navigation }) => {
             }}
           >
             <TouchableOpacity
-              onPress={() => navigation.navigate('ForgotPassword')}
+              onPress={() => navigation.navigate(FORGOT_PASSWORD_SCREEN)}
             >
               <Text style={styles.metaCTA}>Forgot Password</Text>
             </TouchableOpacity>
@@ -240,7 +245,7 @@ const styles = StyleSheet.create({
     color: STYLES.color.primary,
     textAlign: 'left',
     fontSize: 14,
-    fontWeight: 500,
+
     fontFamily: STYLES.font.font__medium,
   },
   link: {

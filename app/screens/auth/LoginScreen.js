@@ -56,7 +56,8 @@ const LoginScreen = ({ navigation }) => {
           <Text
             style={{
               width: '100%',
-              fontFamily: 'font__bold',
+              fontFamily: STYLES.font.font__bold,
+              fontWeight: 'bold',
               textAlign: 'left',
               fontSize: 38,
               color: STYLES.color.primary,
@@ -161,7 +162,7 @@ const styles = StyleSheet.create({
     color: STYLES.color.primary,
     textAlign: 'center',
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: 'bold',
     fontFamily: STYLES.font.font__medium,
   },
 });

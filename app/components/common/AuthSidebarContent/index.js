@@ -18,7 +18,7 @@ import { LOGIN_SCREEN } from 'config/screens.config';
 
 export default function AuthSidebarContent(props) {
   const auth = getAuth();
-  // const { displayName } = auth.currentUser || {};
+  const { displayName } = auth.currentUser || {};
   const logoutUser = () => {
     signOut(auth).then(() => {
       props.navigation.navigate(LOGIN_SCREEN);
@@ -55,7 +55,7 @@ export default function AuthSidebarContent(props) {
               paddingTop: 4,
             }}
           >
-            Samuel Chibueze
+            {displayName || 'Howdy :)'}
           </Text>
           <Text
             style={{
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
 
   metaText: {
     fontFamily: STYLES.font.font__medium,
-    fontWeight: 700,
+    fontWeight: 'bold',
 
     fontSize: 16,
     color: STYLES.color.dark,

@@ -14,6 +14,13 @@ import { STYLES } from 'config/styles.config';
 import * as ImagePicker from 'expo-image-picker';
 import ScreenWrapper from 'components/common/ScreenWrapper';
 import { AntDesign } from '@expo/vector-icons';
+import { getAuth } from 'firebase/auth';
+import axios from 'axios';
+import { DataStore } from 'backend/database.firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import Toast from 'react-native-root-toast';
+import { POSTS_FEED_SCREEN } from 'config/screens.config';
+const storage = getStorage();
 export default function CreatePostScreen({ navigation }) {
   const [content, setContent] = useState('');
   const [photo, setPhoto] = useState('');
@@ -29,21 +36,48 @@ export default function CreatePostScreen({ navigation }) {
     });
 
     if (result.canceled) return;
+
     setPhoto(result.assets[0]);
   };
   const closeModal = () => {
     setIsVisibleModal(false);
-    navigation.navigate('PostFeed');
+    navigation.navigate(POSTS_FEED_SCREEN);
   };
 
-  const handleSubmitPost = (image, body = {}) => {
-    const fd = new FormData();
-
-    fd.append('image', { ...image });
-
-    Object.keys(body).forEach((key) => fd.append(key, body[key]));
-
+  const handleSubmitPost = async (image, body = {}) => {
     // Call the api and close modal
+    const data = {
+      owner: getAuth().currentUser?.uid,
+      content,
+    };
+
+    // Get Unique name with image extensionphoto
+    const photoURI = photo.uri;
+    const photoExtension = photoURI.substr(photoURI.lastIndexOf('.'));
+    const fileName = Date.now().toString() + photoExtension;
+
+    // Convert to blob
+    const storageRef = ref(storage, fileName);
+    const response = await fetch(photo.uri);
+    const blob = await response.blob();
+
+    const metadata = {
+      contentType: 'image/jpeg',
+    };
+    try {
+      const snapshot = await uploadBytes(storageRef, blob, metadata);
+      const url = await getDownloadURL(snapshot.ref);
+      data['photo'] = url;
+      await new DataStore('posts').create(data);
+      Toast.show('Post created ', {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
+    } catch (error) {}
+
     closeModal();
   };
   const isValidPost = photo || content.trim().length;

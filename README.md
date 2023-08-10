@@ -16,6 +16,12 @@ Install dependences and start app
 cd soshare && npm install && npm start
 ```
 
+### Todo
+
+- Activity Indicator
+- Bottom Sheet
+- PasswordField components
+
 ### Resources
 
 - [Up and running with RTK](https://www.notjust.dev/blog/2022-12-24-react-native-redux-toolkit)

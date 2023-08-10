@@ -1,6 +1,6 @@
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import React from 'react';
-import { STYLES } from '../../../config/styles.config';
+import { STYLES } from 'config/styles.config';
 
 export default function InputBox({ label, value, errorMessage, ...rest }) {
   return (
@@ -9,7 +9,7 @@ export default function InputBox({ label, value, errorMessage, ...rest }) {
         <Text
           style={{
             fontFamily: STYLES.font.font__regular,
-            fontWeight: 500,
+            fontWeight: 'bold',
             color: STYLES.color.primary,
           }}
         >

@@ -9,10 +9,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, Text, Pressable } from 'react-native';
 import ProfileNavigation from '../profile';
 import NotificationsScreen from 'screens/NotificationsScreen';
+import {
+  CREATE_POST_SCREEN,
+  POSTS_FEED_SCREEN,
+  POST_DETAILS_SCREEN,
+} from '../../config/screens.config';
 
 const PostsTab = createBottomTabNavigator();
 
-export const PostsTabNavigation = () => {
+export const PostsTabNavigator = () => {
   return (
     <PostsTab.Navigator
       screenOptions={{
@@ -37,7 +42,7 @@ export const PostsTabNavigation = () => {
             <MaterialIcons name='dynamic-feed' {...props} />
           ),
         }}
-        name='PostFeed'
+        name={POSTS_FEED_SCREEN}
         component={PostFeedScreen}
       />
       <PostsTab.Screen
@@ -50,12 +55,12 @@ export const PostsTabNavigation = () => {
             <MaterialIcons name='add-box' {...props} size={42} />
           ),
         }}
-        name='NewPost'
+        name='EmptyNewPost'
         component={CreatePostScreen}
         listeners={({ navigation }) => ({
           tabPress: (e) => {
             e.preventDefault();
-            navigation.navigate('CreatePost');
+            navigation.navigate(CREATE_POST_SCREEN);
           },
         })}
       />
@@ -85,9 +90,15 @@ export default function PostNavigation(params) {
         headerShown: false,
       }}
     >
-      <PostsStack.Screen name='Posts' component={PostsTabNavigation} />
-      <PostsStack.Screen name='PostItem' component={PostItemScreen} />
-      <PostsStack.Screen name='CreatePost' component={CreatePostScreen} />
+      <PostsStack.Screen name='Posts' component={PostsTabNavigator} />
+      <PostsStack.Screen
+        name={POST_DETAILS_SCREEN}
+        component={PostItemScreen}
+      />
+      <PostsStack.Screen
+        name={CREATE_POST_SCREEN}
+        component={CreatePostScreen}
+      />
     </PostsStack.Navigator>
   );
 }

@@ -5,7 +5,7 @@ import ForgotPasswordScreen from 'screens/auth/ForgotPasswordScreen';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import DashboardScreen from 'screens/DashboardScreen';
 import ProfileNavigation from './profile';
-import PostStackNavigation from './posts';
+import PostStackNavigator from './posts';
 import { STYLES } from 'config/styles.config';
 import AuthSidebarContent from 'components/common/AuthSidebarContent';
 import {
@@ -13,15 +13,21 @@ import {
   Feather,
   MaterialIcons,
 } from '@expo/vector-icons';
-import { View, Text } from 'react-native';
 import AuthHeader from 'components/common/AuthHeader';
-import MediaScreen from '../screens/MediaScreen';
-import { useSelector } from 'react-redux';
+import {
+  DASHBOARD_SCREEN,
+  FORGOT_PASSWORD_SCREEN,
+  LOGIN_SCREEN,
+  POSTS_SCREEN,
+  REGISTER_SCREEN,
+} from '../config/screens.config';
+import { getAuth } from 'firebase/auth';
+import SettingScreen from '../screens/SettingScreen';
 
 // ===================
 const AuthDrawer = createDrawerNavigator();
 
-const AuthDrawerNavigation = () => {
+const AuthDrawerNavigator = () => {
   return (
     <AuthDrawer.Navigator
       drawerContent={(props) => <AuthSidebarContent {...props} />}
@@ -35,7 +41,7 @@ const AuthDrawerNavigation = () => {
           width: '100%',
         },
         drawerLabelStyle: {
-          fontFamily: STYLES.font.font__bold,
+          fontFamily: STYLES.font.font__regular,
           fontSize: 15,
         },
         drawerStyle: {
@@ -50,18 +56,18 @@ const AuthDrawerNavigation = () => {
           header: (props) => <AuthHeader {...props} />,
           drawerIcon: (props) => <MaterialIcons name='post-add' {...props} />,
         }}
-        name='PostStack'
-        component={PostStackNavigation}
+        name={'PostsNavigator'}
+        component={PostStackNavigator}
       />
-      <AuthDrawer.Screen
+      {/* <AuthDrawer.Screen
         options={{
           headerShown: false,
           drawerIcon: (props) => <Feather name='user' {...props} />,
         }}
         name='Profile'
         component={ProfileNavigation}
-      />
-      <AuthDrawer.Screen
+      /> */}
+      {/* <AuthDrawer.Screen
         options={{
           drawerIcon: ({ color, focused, size }) => (
             <MaterialCommunityIcons
@@ -71,18 +77,18 @@ const AuthDrawerNavigation = () => {
             />
           ),
         }}
-        name='Dashboard'
+        name={DASHBOARD_SCREEN}
         component={DashboardScreen}
-      />
+      /> */}
     </AuthDrawer.Navigator>
   );
 };
 
-// ==================
 const Stack = createNativeStackNavigator();
 
+// const currentUser = getAuth().currentUser;
 export default function AppStack() {
-  const auth = useSelector((state) => state.auth);
+  const currentUser = getAuth().currentUser;
   return (
     <Stack.Navigator
       screenOptions={{
@@ -95,28 +101,26 @@ export default function AppStack() {
         },
       }}
     >
-      {!!auth.isLoggedIn ? (
-        <>
-          <Stack.Screen
-            options={{
-              headerShown: false,
-            }}
-            name='Accounts'
-            component={AuthDrawerNavigation}
-          />
-        </>
+      {currentUser ? (
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name={'AuthNavigator'}
+          component={AuthDrawerNavigator}
+        />
       ) : (
         <>
-          <Stack.Screen name='Login' component={LoginScreen} />
+          <Stack.Screen name={LOGIN_SCREEN} component={LoginScreen} />
           <Stack.Screen
             options={{
               title: 'Create Account',
             }}
-            name='Register'
+            name={REGISTER_SCREEN}
             component={RegisterScreen}
           />
           <Stack.Screen
-            name='ForgotPassword'
+            name={FORGOT_PASSWORD_SCREEN}
             component={ForgotPasswordScreen}
           />
         </>

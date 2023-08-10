@@ -8,8 +8,8 @@ export const STYLES = {
     link: 'blue',
   },
   font: {
-    font__bold: 'font__bold',
-    font__medium: 'font__medium',
-    font__regular: 'font__regular',
+    font__bold: 'Roboto',
+    font__medium: 'Roboto',
+    font__regular: 'Roboto',
   },
 };

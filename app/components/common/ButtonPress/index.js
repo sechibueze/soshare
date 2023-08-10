@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: STYLES.color.light,
     fontFamily: STYLES.font.font__medium,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 18,
   },

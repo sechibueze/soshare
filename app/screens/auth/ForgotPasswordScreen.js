@@ -6,6 +6,7 @@ import ScreenWrapper from 'components/common/ScreenWrapper';
 import InputBox from 'components/common/InputBox';
 import ButtonPress from 'components/common/ButtonPress';
 import { STYLES } from 'config/styles.config';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 const EMAIL = 'email';
 
 const initialFormState = {
@@ -18,6 +19,23 @@ const passwordRecoverySchema = Yup.object().shape({
     .required('Email address is required'),
 });
 const ForgotPasswordScreen = ({ navigation }) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
+  const handlePasswordRecovery = async (data) => {
+    setLoading(true);
+    setError('');
+    setMessage('');
+    sendPasswordResetEmail(getAuth(), data[EMAIL])
+      .then(() => {
+        setLoading(false);
+        setMessage('Email has been sent');
+      })
+      .catch((err) => {
+        setLoading(false);
+        setError(err.message);
+      });
+  };
   return (
     <ScreenWrapper>
       <View style={styles.container}>
@@ -32,11 +50,12 @@ const ForgotPasswordScreen = ({ navigation }) => {
         >
           Password Recovery
         </Text>
-
+        {error && <Text> {error} </Text>}
+        {message && <Text> {message} </Text>}
         <Formik
           validationSchema={passwordRecoverySchema}
-          onSubmit={(data) => {
-            navigation.navigate('Login');
+          onSubmit={async (data) => {
+            await handlePasswordRecovery(data);
           }}
           initialValues={initialFormState}
         >
@@ -62,7 +81,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
               />
 
               <ButtonPress
-                label={'Recover Password'}
+                label={loading ? 'Loading...' : 'Recover Password'}
                 style={{ marginVertical: 30 }}
                 onPress={formSummitHandler}
               />

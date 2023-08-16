@@ -1,5 +1,11 @@
 import React from 'react';
-import { SafeAreaView, Platform, StatusBar, StyleSheet } from 'react-native';
+import {
+  SafeAreaView,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+} from 'react-native';
 
 export default function ScreenWrapper({ children }) {
   return <SafeAreaView style={styles.container}>{children}</SafeAreaView>;

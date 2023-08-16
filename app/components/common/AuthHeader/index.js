@@ -6,12 +6,13 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
-import React from 'react';
+import React, { useRef, useMemo, useCallback } from 'react';
 import { STYLES } from 'config/styles.config';
 import { Ionicons } from '@expo/vector-icons';
 
 import { MaterialIcons } from '@expo/vector-icons';
-export default function AuthHeader({ navigation }) {
+import AppBottomSheet from '../AppBottomSheet';
+export default function AuthHeader({ handleUserPress }) {
   return (
     <View
       style={{
@@ -47,7 +48,7 @@ export default function AuthHeader({ navigation }) {
         }}
       >
         {/* <Ionicons name='notifications' size={24} color={STYLES.color.primary} /> */}
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleUserPress}>
           <Image
             style={{
               width: 40,

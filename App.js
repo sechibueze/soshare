@@ -4,8 +4,9 @@ import { RootSiblingParent } from 'react-native-root-siblings';
 import AppStack from 'navigation';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useRef, useMemo, useEffect, useState } from 'react';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // SplashScreen.preventAutoHideAsync();
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
     });
     return subscriber;
   }, []);
+
   // const [isFontLoaded] = useFonts({
   //   font__bold: require('./app/assets/fonts/Inter-Bold.ttf'),
   //   font__medium: require('./app/assets/fonts/Inter-Medium.ttf'),
@@ -30,11 +32,15 @@ export default function App() {
   // if (!isFontLoaded) {
   //   return null;
   // }
+
   return (
     <RootSiblingParent>
-      <NavigationContainer>
-        <AppStack />
-      </NavigationContainer>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <NavigationContainer>
+          {/* <Button title='press' onPress={handlePress} /> */}
+          <AppStack />
+        </NavigationContainer>
+      </GestureHandlerRootView>
     </RootSiblingParent>
   );
 }

@@ -23,43 +23,52 @@ import {
 } from '../config/screens.config';
 import { getAuth } from 'firebase/auth';
 import SettingScreen from '../screens/SettingScreen';
-
+import AppBottomSheet from '../components/common/AppBottomSheet';
+import { useRef } from 'react';
 // ===================
 const AuthDrawer = createDrawerNavigator();
 
 const AuthDrawerNavigator = () => {
+  const sheetRef = useRef();
+  const handlePress = () => {
+    sheetRef.current?.present();
+  };
   return (
-    <AuthDrawer.Navigator
-      drawerContent={(props) => <AuthSidebarContent {...props} />}
-      screenOptions={{
-        drawerType: 'front',
-        overlayColor: '#ccc',
-        drawerActiveTintColor: STYLES.color.light,
-        drawerActiveBackgroundColor: STYLES.color.primary,
-        drawerInactiveTintColor: STYLES.color.primary,
-        drawerItemStyle: {
-          width: '100%',
-        },
-        drawerLabelStyle: {
-          fontFamily: STYLES.font.font__regular,
-          fontSize: 15,
-        },
-        drawerStyle: {
-          backgroundColor: '#f2f2f2',
-        },
-        header: (props) => <AuthHeader {...props} />,
-      }}
-    >
-      <AuthDrawer.Screen
-        options={{
-          drawerLabel: 'Posts',
-          header: (props) => <AuthHeader {...props} />,
-          drawerIcon: (props) => <MaterialIcons name='post-add' {...props} />,
+    <>
+      <AuthDrawer.Navigator
+        drawerContent={(props) => <AuthSidebarContent {...props} />}
+        screenOptions={{
+          drawerType: 'front',
+          overlayColor: '#ccc',
+          drawerActiveTintColor: STYLES.color.light,
+          drawerActiveBackgroundColor: STYLES.color.primary,
+          drawerInactiveTintColor: STYLES.color.primary,
+          drawerItemStyle: {
+            width: '100%',
+          },
+          drawerLabelStyle: {
+            fontFamily: STYLES.font.font__regular,
+            fontSize: 15,
+          },
+          drawerStyle: {
+            backgroundColor: '#f2f2f2',
+          },
+          header: (props) => (
+            <AuthHeader handleUserPress={handlePress} {...props} />
+          ),
         }}
-        name={'PostsNavigator'}
-        component={PostStackNavigator}
-      />
-      {/* <AuthDrawer.Screen
+      >
+        <AuthDrawer.Screen
+          options={{
+            drawerLabel: 'Posts',
+            // header: (props) => <AuthHeader  {...props} />,
+            drawerIcon: (props) => <MaterialIcons name='post-add' {...props} />,
+          }}
+          name={'PostsNavigator'}
+          component={PostStackNavigator}
+        />
+
+        {/* <AuthDrawer.Screen
         options={{
           headerShown: false,
           drawerIcon: (props) => <Feather name='user' {...props} />,
@@ -67,7 +76,7 @@ const AuthDrawerNavigator = () => {
         name='Profile'
         component={ProfileNavigation}
       /> */}
-      {/* <AuthDrawer.Screen
+        {/* <AuthDrawer.Screen
         options={{
           drawerIcon: ({ color, focused, size }) => (
             <MaterialCommunityIcons
@@ -80,13 +89,14 @@ const AuthDrawerNavigator = () => {
         name={DASHBOARD_SCREEN}
         component={DashboardScreen}
       /> */}
-    </AuthDrawer.Navigator>
+      </AuthDrawer.Navigator>
+      <AppBottomSheet ref={sheetRef} />
+    </>
   );
 };
 
 const Stack = createNativeStackNavigator();
 
-// const currentUser = getAuth().currentUser;
 export default function AppStack() {
   const currentUser = getAuth().currentUser;
   return (

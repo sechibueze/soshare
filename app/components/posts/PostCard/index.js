@@ -1,6 +1,12 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableHighlight,
+  ImageBackground,
+} from 'react-native';
 import React, { useState } from 'react';
-import { TouchableHighlight } from 'react-native-gesture-handler';
 import {
   FontAwesome,
   MaterialCommunityIcons,
@@ -8,8 +14,9 @@ import {
   Entypo,
 } from '@expo/vector-icons';
 import { STYLES } from 'config/styles.config';
-export default function PostCard({ post }) {
-  const { title, image_url, comments, content } = post || {};
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+export default function PostCard({ post, handlePostDetails }) {
+  const { title, photo: imageURI, content } = post || {};
   const [like, setLike] = useState(false);
   return (
     <View
@@ -73,6 +80,14 @@ export default function PostCard({ post }) {
               sechibueze
             </Text>
           </View>
+
+          <TouchableWithoutFeedback onPress={() => handlePostDetails(post)}>
+            <MaterialCommunityIcons
+              name='dots-vertical'
+              size={34}
+              color={STYLES.color.primary}
+            />
+          </TouchableWithoutFeedback>
         </View>
         <View
           style={{
@@ -80,9 +95,20 @@ export default function PostCard({ post }) {
             borderRadius: 4,
           }}
         >
+          <ImageBackground
+            style={{
+              width: '100%',
+              height: 150,
+              borderRadius: 2,
+              resizeMode: 'contain',
+              borderColor: STYLES.color.text,
+            }}
+            source={{ uri: imageURI }}
+          />
           <Text
             style={{
               fontFamily: STYLES.font.font__bold,
+              fontWeight: 'bold',
               fontSize: 15,
               color: STYLES.color.text,
             }}
@@ -120,17 +146,17 @@ export default function PostCard({ post }) {
               </Text>
             </View>
           )}
-          {!!comments.length && (
+          {!!content.length && (
             <View style={styles.fanStatsContanier}>
               <Text
                 style={{ fontFamily: STYLES.font.font__bold, fontSize: 13 }}
               >
-                {comments.length}
+                {content.length}
               </Text>
               <Text
                 style={{ fontFamily: STYLES.font.font__regular, fontSize: 13 }}
               >
-                {comments.length > 1 ? 'comments' : 'comment'}
+                {content.length > 1 ? 'comments' : 'comment'}
               </Text>
             </View>
           )}

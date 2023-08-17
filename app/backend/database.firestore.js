@@ -1,7 +1,7 @@
 import { getFirestore } from 'firebase/firestore';
 import app from './firebase.config';
 
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, getDocs, collection } from 'firebase/firestore';
 
 const databaseRef = getFirestore(app);
 export const createDocument = async (collectionName, dataContent) => {
@@ -14,16 +14,38 @@ export const createDocument = async (collectionName, dataContent) => {
 
 export class DataStore {
   constructor(collectionName) {
-    this.collection = collectionName;
+    this.collectionName = collectionName;
     this.databaseRef = databaseRef;
   }
   async create(data) {
     try {
-      return await addDoc(collection(this.databaseRef, this.collection), data);
+      return await addDoc(
+        collection(this.databaseRef, this.collectionName),
+        data
+      );
     } catch (e) {
       throw new Error(`Error adding document: ${e}`);
     }
   }
 
-  async get() {}
+  async get() {
+    try {
+      let result = [];
+      const querySnapshot = await getDocs(
+        collection(this.databaseRef, this.collectionName)
+      );
+      querySnapshot.forEach((doc, i) => {
+        let data = {
+          id: doc.id,
+          ...doc.data(),
+        };
+
+        result.push(data);
+      });
+
+      return result;
+    } catch (e) {
+      throw new Error(`Error getting documents: ${e}`);
+    }
+  }
 }

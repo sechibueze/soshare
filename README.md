@@ -19,7 +19,7 @@ cd soshare && npm install && npm start
 ### Todo
 
 - Activity Indicator
-- Bottom Sheet
+- Customize Bottom Sheet
 - PasswordField components
 
 ### Resources
@@ -28,3 +28,4 @@ cd soshare && npm install && npm start
 - [Persist Redux state](https://blog.logrocket.com/persist-state-redux-persist-redux-toolkit-react/)
 - [Icons](https://icons.expo.fyi/)
 - [Background SVG](https://www.svgbackgrounds.com/)
+- [Toast Notification](https://github.com/magicismight/react-native-root-toast)

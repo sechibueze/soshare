@@ -1,31 +1,20 @@
-import React, {
-  useCallback,
-  useRef,
-  useMemo,
-  useEffect,
-  useState,
-} from 'react';
+import React, { useMemo } from 'react';
 
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
 } from '@gorhom/bottom-sheet';
-import { Button, Text } from 'react-native';
-const AppBottomSheet = React.forwardRef((_, ref) => {
-  // const sheetRef = useRef();
-  const snapPoints = useMemo(() => ['25%', '45%', '60%'], []);
+const AppBottomSheet = React.forwardRef(({ children }, ref) => {
+  const snapPoints = useMemo(() => ['80%'], []);
 
-  //   const handlePress = () => {
-  //     ref.current?.present();
-  //   };
   return (
     <BottomSheetModalProvider>
-      <BottomSheetModal ref={ref} snapPoints={snapPoints}>
-        <Text>Bottom sheet works</Text>
-        <Text>Bottom sheet works</Text>
-        <Text>Bottom sheet works</Text>
-        <Text>Bottom sheet works</Text>
-        <Text>Bottom sheet works</Text>
+      <BottomSheetModal
+        ref={ref}
+        snapPoints={snapPoints}
+        enablePanDownToClose={true}
+      >
+        {children}
       </BottomSheetModal>
     </BottomSheetModalProvider>
   );

@@ -20,10 +20,15 @@ import { DataStore } from 'backend/database.firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Toast from 'react-native-root-toast';
 import { POSTS_FEED_SCREEN } from 'config/screens.config';
+import Spinner from '../../components/common/Spinner';
+import { toastConfig } from 'config/notification.config';
 const storage = getStorage();
+
 export default function CreatePostScreen({ navigation }) {
   const [content, setContent] = useState('');
+  const [title, setTitle] = useState('');
   const [photo, setPhoto] = useState('');
+  const [loading, setLoading] = useState(false);
   const [isVisibleModal, setIsVisibleModal] = useState(true);
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -48,37 +53,41 @@ export default function CreatePostScreen({ navigation }) {
     // Call the api and close modal
     const data = {
       owner: getAuth().currentUser?.uid,
+      title,
       content,
     };
-
-    // Get Unique name with image extensionphoto
-    const photoURI = photo.uri;
-    const photoExtension = photoURI.substr(photoURI.lastIndexOf('.'));
-    const fileName = Date.now().toString() + photoExtension;
-
-    // Convert to blob
-    const storageRef = ref(storage, fileName);
-    const response = await fetch(photo.uri);
-    const blob = await response.blob();
-
     const metadata = {
       contentType: 'image/jpeg',
     };
+
+    setLoading(true);
+
     try {
+      // Get Unique name with image extensionphoto
+      const photoURI = photo.uri;
+      const photoExtension = photoURI.substr(photoURI.lastIndexOf('.'));
+      const fileName = Date.now().toString() + photoExtension;
+
+      // Convert to blob
+      const storageRef = ref(storage, fileName);
+      const response = await fetch(photo.uri);
+      const blob = await response.blob();
+
       const snapshot = await uploadBytes(storageRef, blob, metadata);
       const url = await getDownloadURL(snapshot.ref);
       data['photo'] = url;
       await new DataStore('posts').create(data);
-      Toast.show('Post created ', {
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-      });
-    } catch (error) {}
+      setLoading(false);
 
-    closeModal();
+      Toast.show('Post created ', toastConfig);
+      closeModal();
+    } catch (error) {
+      setLoading(false);
+      Toast.show('Failed to create post ', {
+        ...toastConfig,
+        backgroundColor: STYLES.color.danger,
+      });
+    }
   };
   const isValidPost = photo || content.trim().length;
   return (
@@ -88,6 +97,19 @@ export default function CreatePostScreen({ navigation }) {
         visible={isVisibleModal}
         onRequestClose={closeModal}
       >
+        <Spinner
+          color={STYLES.color.primary}
+          size='large'
+          animating={loading}
+          message={loading ? 'Creating your post...' : ''}
+          containerStyles={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            zIndex: 2,
+            transform: [{ translateX: -50 }, { translateY: -50 }],
+          }}
+        />
         {/* Header */}
         <View
           style={{
@@ -179,6 +201,22 @@ export default function CreatePostScreen({ navigation }) {
             alignItems: 'center',
           }}
         >
+          <TextInput
+            style={{
+              backgroundColor: '#f9f9f9',
+              paddingHorizontal: 12,
+              paddingVertical: 10,
+              borderRadius: 6,
+              fontSize: 16,
+              fontFamily: STYLES.font.font__medium,
+              color: STYLES.color.text,
+              width: '95%',
+              textAlignVertical: 'top',
+            }}
+            placeholder='Give your idea a heading that sticks!'
+            value={title}
+            onChangeText={(text) => setTitle(text)}
+          />
           <TextInput
             style={{
               backgroundColor: '#f9f9f9',
